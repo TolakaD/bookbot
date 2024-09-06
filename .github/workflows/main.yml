@@ -1,0 +1,36 @@
+name: CI
+
+on: 
+  workflow_dispatch:
+    inputs:
+      whitelist:
+        description: list of not valid entries
+        required: false
+      validEntries:
+        description: list of valid entries
+        required: false
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Run validation
+      run: |
+        # Define an array of titles
+        whitelist="abc-123*[]()?"
+        #whitelist="abc-123*,xyzs-456,host-789*,()node-42,server-01*,alpha-99*,test-88,web-77*,domain-01*,example-23"
+        echo "Whitelist to validate: $whitelist"
+        
+        # Check if the title contains any number or whitespace
+        if [[ "addd_" =~ [()\[\]{}?_] ]]; then
+          echo "Entry whitelist is not valid"
+          exit 1
+        else
+          echo "Entry whitelist is valid"
+        fi
+    
+
